@@ -21,3 +21,16 @@ after_success: #테스트가 성공하면 본격적으로 운영버전을 빌드
   - docker push dotoryeee/docker-frontend
   - docker push dotoryeee/docker-backend
   - docker push dotoryeee/docker-nginx
+
+deploy:
+  provider: elasticbeanstalk
+  region: "ap-northeast-2"
+  app: "dotoryeee_FIRST_ECS_APP"
+  env: Dotoryeeefirstecsapp-env
+  bucket_name: elasticbeanstalk-ap-northeast-2-737382971423
+  bucket_path: "dotoryeee_FIRST_ECS_APP"
+  on:
+    branch: master
+
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key: $AWS_SECRET_ACCESS_KEY
