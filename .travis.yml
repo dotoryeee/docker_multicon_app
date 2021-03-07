@@ -1,0 +1,23 @@
+languag: generic
+
+sudo: required
+
+services: #Travis CI에게 도커 환경으로 만들것이라고 선언해주기
+  - docker
+
+before_install: #구성된 도커 환경에서 Dockerfile.dev를 이용해 이미지 생성
+  - docker build -t dotoryeee/react-test -f ./frontend/Dockerfile.dev ./frontend
+
+script: #생성된 테스트 이미지를 이용해 테스트 수행하기
+  - docker run -e CI=true dotoryeee/frontend npm run test
+
+after_success: #테스트가 성공하면 본격적으로 운영버전을 빌드
+  - docker build -t dotoryeee/docker-frontend ./frontend
+  - docker build -t dotoryeee/docker-backend ./backend
+  - docker build -t dotoryeee/docker-nginx ./nginx
+  #도커 허브에 로그인
+  - echo "$DOCKER_HUB_PASSWORD" | docker login -u "$DOCKER_HUB_ID" --password-stdin
+  #도커 허브에 이미지 푸시
+  - docker push dotoryeee/docker-frontend
+  - docker push dotoryeee/docker-backend
+  - docker push dotoryeee/docker-nginx
