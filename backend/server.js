@@ -10,6 +10,8 @@ const app = express();
 //JSON형태로 오는 요청을 해석할 수 있도록 parser 사용
 app.use(bodyParser.json());
 //------------! 테이블 생성 !---------------/
+//참고용으로 기록해두었으며, 실제 환경에서는 컨테이너 로드시 별도로 테이블을 생성합니다
+/*
 db.pool.query(`CREATE TABLE lists(
     id INT AUTO_INCREMENT,
     value TEXT,
@@ -17,10 +19,9 @@ db.pool.query(`CREATE TABLE lists(
 )`, (err, results, fields) => {
     console.log(`results : ${results}`)
 })
-    
+*/   
 //--------------! API !--------------------/
 //DB 테이블에 있는 모든 데이터를 프론트로 보내기
-//GET은 values
 app.get('/api/values'), function (req, res, next) { //핸들러 생성
     db.pool.query("SELECT * FROM lists;", //DB에서 모든 데이터 가져오기
         (err, results, fields) => {
@@ -32,8 +33,7 @@ app.get('/api/values'), function (req, res, next) { //핸들러 생성
 })
 
 //프론트에서 입력한 값을 DB 테이블에 입력
-//POST는 value
-app.post('/api/value', function (res, req, next) {
+app.post('/api/values', function (res, req, next) {
     db.pool.query(`INSERT INTO lists (values) VALUES("${req.body.value}");`, //bodyParser 사용
         (err, results, fields) => {
             if (err)

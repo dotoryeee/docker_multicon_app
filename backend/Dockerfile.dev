@@ -1,0 +1,12 @@
+FROM node:alpine
+
+WORKDIR /app
+
+COPY ./package.json ./
+
+RUN npm install
+
+COPY ./ ./
+
+CMD ["npm", "run", "dev"]
+#npm run start가 아닌 npm run dev를 사용해서 nodemon모듈을 이용해 시작합니다
