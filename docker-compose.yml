@@ -5,25 +5,27 @@ services:
       dockerfile: Dockerfile.dev
       context: ./frontend
     container_name: app_frontend
-    environment:
-      - CHOKIDAR_USEPOLLING=true
+    stdin_open: true #리액트 앱을 종료할 때 발생하는 버그를 해결해줍니다
     volumes: #코드수정후 이미지를 다시 빌드할 필요 없도록 매핑합니다
       - /app/node_modules #매핑에서 제외합니다
       - ./frontend:/app #나머지는 전부 이곳으로 매핑합니다
-    stdin_open: true #리액트 앱을 종료할 때 발생하는 버그를 해결해줍니다
+    #environment:
+    #  - CHOKIDAR_USEPOLLING=true
+
   nginx:
-    restart: always #proxy역할을 하고 있는 Nginx가 죽어버리면 시스템 전체가 다운되기 때문에 얘는 항상 재시작
     #재시작 정책
     #no : 어떤 상황에도 재시작 하지 않음
     #always : 항상 재시작
     #on-failure : on-failure에러코드와 함께 컨테이너가 멈추었을 때만 재시작
     #unless-stopped : 개발자가 임의로 멈추려 하는 경우를 제외하고 항상 재시작
+    restart: always #proxy역할을 하고 있는 Nginx가 죽어버리면 시스템 전체가 다운되기 때문에 얘는 항상 재시작
     build:
       dockerfile: Dockerfile
       context: ./nginx
     container_name: app_proxy_nginx
     ports:
       - "3000:80"
+
   backend:
     build:
       dockerfile: Dockerfile.dev
@@ -32,6 +34,7 @@ services:
     volumes:
       - /app/node_modules
       - ./backend:/app
+
     # environment:
     #   MYSQL_HOST: mysql
     #   MYSQL_USER: root

@@ -18,6 +18,7 @@
         {
             "name": "nginx",
             "image": "dotoryeee/docker-nginx",
+            "hostname": "nginx",
             "essential": true,
             "portMappings": [
                 {
