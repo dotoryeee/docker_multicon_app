@@ -27,7 +27,7 @@
                 }
             ],
             "links": ["frontend", "backend"],
-            "memory":128
+            "memory": 128
         }
     ]
 }
